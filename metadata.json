@@ -1,0 +1,12 @@
+{
+  "name": "NextBorder AIOS",
+  "description": "Global Education • Immigration • AI Enterprise Platform",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API",
+    "PARALLEL_AI_AGENTS_GABRIEL",
+    "AI_AGENT_MANAGER",
+    "SELF_EVOLVING_AGENTS",
+    "KNOWLEDGE_SHARING_AGENTS"
+  ]
+}
