@@ -2,7 +2,6 @@ package com.example.util
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
