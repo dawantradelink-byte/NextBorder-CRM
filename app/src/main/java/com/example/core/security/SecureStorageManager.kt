@@ -17,7 +17,12 @@ object SecureStorageManager {
     fun getEncryptedString(context: Context, key: String, defaultValue: String = ""): String {
         val prefs = context.getSharedPreferences(PREFS_SECURE, Context.MODE_PRIVATE)
         val encrypted = prefs.getString(key, null) ?: return defaultValue
-        return SecurityManager.decrypt(context, encrypted)
+        return try {
+            SecurityManager.decrypt(context, encrypted)
+        } catch (e: Exception) {
+            AiosLogger.log(LogCategory.SECURITY, "SecureStorageManager", "Failed to decrypt key: $key. Returning default value.")
+            defaultValue
+        }
     }
 
     fun removeKey(context: Context, key: String) {

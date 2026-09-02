@@ -48,9 +48,7 @@ object SecurityManager {
             val decryptedBytes = cipher.doFinal(decodedBytes)
             String(decryptedBytes, StandardCharsets.UTF_8)
         } catch (e: Exception) {
-            plainTextFallback(cipherText)
+            throw SecurityException("Decryption failed", e)
         }
     }
-
-    private fun plainTextFallback(text: String): String = text
 }
