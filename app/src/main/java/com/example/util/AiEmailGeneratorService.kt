@@ -1,6 +1,5 @@
 package com.example.util
 
-import com.example.BuildConfig
 import com.example.data.BusinessSettings
 import com.example.data.University
 import kotlinx.coroutines.Dispatchers
