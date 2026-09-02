@@ -486,11 +486,12 @@ object CeoAiResearchCoordinator {
         val crmList = universityDao.getRawActiveList()
         var syncedCount = 0
 
+        val crmNames = crmList.map { it.name.lowercase() }.toSet()
+        val crmWebsites = crmList.mapNotNull { it.website.takeIf { w -> w.isNotBlank() }?.lowercase() }.toSet()
+
         for (item in researchedList) {
-            val existsInCrm = crmList.any { crm ->
-                crm.name.equals(item.institutionName, ignoreCase = true) ||
-                (item.officialWebsite.isNotBlank() && crm.website.equals(item.officialWebsite, ignoreCase = true))
-            }
+            val existsInCrm = crmNames.contains(item.institutionName.lowercase()) ||
+                (item.officialWebsite.isNotBlank() && crmWebsites.contains(item.officialWebsite.lowercase()))
 
             if (!existsInCrm) {
                 val newUni = University(
