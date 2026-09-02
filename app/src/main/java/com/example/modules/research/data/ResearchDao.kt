@@ -22,6 +22,9 @@ interface ResearchDao {
     @Update
     suspend fun updateInstitution(institution: ResearchedInstitutionEntity)
 
+    @Update
+    suspend fun updateInstitutions(institutions: List<ResearchedInstitutionEntity>)
+
     @Query("SELECT * FROM research_jobs ORDER BY assignedAt DESC")
     fun getAllJobs(): Flow<List<ResearchJobEntity>>
 
