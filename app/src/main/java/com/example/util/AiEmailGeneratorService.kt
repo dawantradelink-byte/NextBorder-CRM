@@ -1,16 +1,10 @@
 package com.example.util
 
-import com.example.BuildConfig
 import com.example.data.BusinessSettings
 import com.example.data.University
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONArray
-import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 object AiEmailGeneratorService {
