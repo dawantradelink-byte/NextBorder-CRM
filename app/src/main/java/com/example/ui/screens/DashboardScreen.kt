@@ -33,6 +33,8 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -95,110 +97,383 @@ fun DashboardScreen(
                     4 -> AgentQuickLaunchScreen(onNavigateToAgents)
                 }
             }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Test Statistics Chart
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(Color(0xFF232323))
+                    .padding(20.dp)
+                    .scale(scale)
+            ) {
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Test Statistics", color = Color.White, fontSize = 16.sp)
+                        Column(horizontalAlignment = Alignment.Start) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Box(modifier = Modifier.size(6.dp).background(Color(0xFFFFD54F), CircleShape))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text("Performance", color = Color.White, fontSize = 10.sp)
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Box(modifier = Modifier.size(6.dp).background(Color.Gray, CircleShape))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text("Accuracy", color = Color.White, fontSize = 10.sp)
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                        Canvas(modifier = Modifier.fillMaxSize()) {
+                            val w = size.width
+                            val h = size.height
+
+                            val yellowPath = Path().apply {
+                                moveTo(0f, h * 0.7f)
+                                cubicTo(w * 0.1f, h * 0.9f, w * 0.2f, h * 0.6f, w * 0.3f, h * 0.7f)
+                                cubicTo(w * 0.4f, h * 0.8f, w * 0.45f, h * 0.5f, w * 0.5f, h * 0.6f)
+                                cubicTo(w * 0.6f, h * 0.8f, w * 0.7f, h * 0.9f, w * 0.8f, h * 0.8f)
+                                cubicTo(w * 0.9f, h * 0.7f, w * 0.95f, h * 0.4f, w, h * 0.1f)
+                            }
+
+                            val greyPath = Path().apply {
+                                moveTo(0f, h * 0.5f)
+                                cubicTo(w * 0.15f, h * 0.4f, w * 0.2f, h * 0.8f, w * 0.3f, h * 0.6f)
+                                cubicTo(w * 0.4f, h * 0.4f, w * 0.5f, h * 0.9f, w * 0.6f, h * 0.7f)
+                                cubicTo(w * 0.7f, h * 0.5f, w * 0.8f, h * 0.7f, w * 0.9f, h * 0.9f)
+                            }
+
+                            drawPath(
+                                path = greyPath,
+                                color = Color.Gray,
+                                style = Stroke(
+                                    width = 2.dp.toPx(),
+                                    pathEffect = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+                                )
+                            )
+
+                            drawPath(
+                                path = yellowPath,
+                                color = Color(0xFFFFD54F),
+                                style = Stroke(width = 3.dp.toPx())
+                            )
+
+                            // Highlight Point
+                            val pointX = w * 0.5f
+                            val pointY = h * 0.6f
+
+                            drawCircle(color = Color(0xFF232323), radius = 6.dp.toPx(), center = androidx.compose.ui.geometry.Offset(pointX, pointY))
+                            drawCircle(color = Color.White, radius = 4.dp.toPx(), center = androidx.compose.ui.geometry.Offset(pointX, pointY), style = Stroke(width = 2.dp.toPx()))
+                            drawCircle(color = Color.White, radius = 2.dp.toPx(), center = androidx.compose.ui.geometry.Offset(pointX, pointY))
+                        }
+
+                        // Tooltip
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .offset(y = (-40).dp)
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(Color.White)
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Box(modifier = Modifier.size(6.dp).background(Color(0xFFFFD54F), CircleShape))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text("278 points", color = Color.Black, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Q1", color = Color.Gray, fontSize = 12.sp)
+                        Text("Q2", color = Color.Gray, fontSize = 12.sp)
+                        Text("Q3", color = Color.Gray, fontSize = 12.sp)
+                        Text("Q4", color = Color.Gray, fontSize = 12.sp)
+                        Text("Q5", color = Color.Gray, fontSize = 12.sp)
+                    }
+                }
+            }
         }
     }
 }
 
 @Composable
 fun WelcomeScreen(onStart: () -> Unit) {
-    val infiniteTransition = rememberInfiniteTransition(label = "pulse")
-    val scale by infiniteTransition.animateFloat(
-        initialValue = 0.95f,
-        targetValue = 1.05f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1500, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "scale"
-    )
+    Box(modifier = Modifier.fillMaxSize().background(Color(0xFFB19886))) {
+        androidx.compose.foundation.Image(
+            painter = androidx.compose.ui.res.painterResource(id = com.example.R.drawable.ishak_dawan),
+            contentDescription = "Profile Background",
+            contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.6f)
+                .align(Alignment.TopCenter)
+        )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(vertical = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        GlassCard(
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "NEXT BORDER",
-                    style = MaterialTheme.typography.headlineMedium.copy(
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Color.White
-                    ),
-                    letterSpacing = 2.sp
-                )
-                Text(
-                    text = "VISA & RECRUITMENT CONSULTANCY",
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        fontWeight = FontWeight.Medium,
-                        color = Color(0xFFFF8A00)
-                    ),
-                    letterSpacing = 1.5.sp,
-                    modifier = Modifier.scale(scale)
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(
-                            Brush.radialGradient(
-                                colors = listOf(Color(0xFF3B1C58), Color(0xFF150B2E))
-                            )
-                        )
-                        .border(
-                            2.dp,
-                            Brush.linearGradient(listOf(Color(0xFFFF8A00), Color(0xFFFF2E93))),
-                            RoundedCornerShape(24.dp)
+        // Gradient overlay to blend with the bottom color
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            Color(0xFF8E7C6D).copy(alpha = 0.5f),
+                            Color(0xFFB19886)
                         ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    NextBorderLogo()
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "B2B UNIVERSITY PARTNERSHIP\n& STUDENT RECRUITMENT CRM",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    ),
-                    textAlign = TextAlign.Center
+                        startY = 0f,
+                        endY = 1800f
+                    )
                 )
+        )
 
-                Spacer(modifier = Modifier.height(32.dp))
+        // Adding the required "3D Motion Graphics" using infinite transition for the Chart background and the image
+        val infiniteTransition = rememberInfiniteTransition(label = "pulse")
+        val scale by infiniteTransition.animateFloat(
+            initialValue = 0.98f,
+            targetValue = 1.02f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(2000, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "scale"
+        )
 
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 48.dp, start = 24.dp, end = 24.dp, bottom = 80.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth(0.85f)
-                        .height(52.dp)
-                        .clip(RoundedCornerShape(26.dp))
-                        .background(
-                            Brush.horizontalGradient(
-                                colors = listOf(Color(0xFFFF8A00), Color(0xFFFF2E93))
-                            )
-                        )
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(Color.White.copy(alpha = 0.8f))
                         .clickable { onStart() },
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "OPEN CRM DASHBOARD",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = Color.Black
                     )
+                }
+
+                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(Color.White.copy(alpha = 0.8f))
+                            .clickable { },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Phone,
+                            contentDescription = "Call",
+                            tint = Color.Black
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(Color.White.copy(alpha = 0.8f))
+                            .clickable { },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.MoreHoriz,
+                            contentDescription = "More",
+                            tint = Color.Black
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                text = "Ishak Dawan",
+                style = MaterialTheme.typography.displaySmall.copy(
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color.White
+                ),
+                modifier = Modifier.scale(scale)
+            )
+            Text(
+                text = "Fullstack Developer",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Normal,
+                    color = Color.White.copy(alpha = 0.9f)
+                ),
+                modifier = Modifier.padding(top = 4.dp, bottom = 24.dp)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Kotlin Tag
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color(0xFF8B6C77).copy(alpha = 0.6f))
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(modifier = Modifier.size(12.dp).background(Brush.linearGradient(listOf(Color(0xFF8052FF), Color(0xFFFF7E42))), shape = CircleShape))
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text("Kotlin", color = Color.White, fontSize = 12.sp)
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                // Firebase Tag
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color(0xFF987B68).copy(alpha = 0.6f))
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Default.LocalFireDepartment, contentDescription = "Firebase", tint = Color(0xFFFFCA28), modifier = Modifier.size(14.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text("Firebase", color = Color.White, fontSize = 12.sp)
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                // Jetpack Compose Tag
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color(0xFF757A82).copy(alpha = 0.6f))
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(modifier = Modifier.size(12.dp).background(Color(0xFF4285F4), shape = CircleShape))
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text("Jetpack Compose", color = Color.White, fontSize = 12.sp)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "Building scalable Android applications with modern technologies and clean architecture. Passionate about creating efficient and user-friendly solutions.",
+                color = Color.White.copy(alpha = 0.9f),
+                textAlign = TextAlign.Center,
+                fontSize = 13.sp,
+                lineHeight = 20.sp,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Stats Row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Experience
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
+                    Text("Experience", color = Color.White, fontSize = 12.sp, modifier = Modifier.padding(bottom = 8.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp)
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(Color(0xFFFFD54F)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("5.2 Years", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                    }
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                // Projects
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
+                    Text("Projects", color = Color.White, fontSize = 12.sp, modifier = Modifier.padding(bottom = 8.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp)
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(Color(0xFF232323)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("48", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                    }
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                // Clients (Striped background)
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
+                    Text("Clients", color = Color.White, fontSize = 12.sp, modifier = Modifier.padding(bottom = 8.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp)
+                            .clip(RoundedCornerShape(20.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Canvas(modifier = Modifier.fillMaxSize()) {
+                            val stripeWidth = 5.dp.toPx()
+                            val spacing = 8.dp.toPx()
+                            val width = size.width
+                            val height = size.height
+                            val max = width + height
+                            var i = 0f
+                            while(i < max) {
+                                drawLine(
+                                    color = Color.White.copy(alpha = 0.3f),
+                                    start = androidx.compose.ui.geometry.Offset(i, 0f),
+                                    end = androidx.compose.ui.geometry.Offset(i - height, height),
+                                    strokeWidth = 1.dp.toPx()
+                                )
+                                i += spacing
+                            }
+                        }
+                        Text("23", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                    }
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                // Reviews
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
+                    Text("Reviews", color = Color.White, fontSize = 12.sp, modifier = Modifier.padding(bottom = 8.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp)
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(Color(0xFF9EA3AB)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("4.9", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Icon(Icons.Default.Star, contentDescription = "Star", tint = Color(0xFFFFCA28), modifier = Modifier.size(12.dp))
+                        }
+                    }
                 }
             }
         }
