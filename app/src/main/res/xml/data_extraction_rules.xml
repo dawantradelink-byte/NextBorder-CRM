@@ -5,10 +5,11 @@
 -->
 <data-extraction-rules>
     <cloud-backup>
-        <!-- TODO: Use <include> and <exclude> to control what is backed up.
-        <include .../>
-        <exclude .../>
-        -->
+        <include domain="database" path="."/>
+        <include domain="sharedpref" path="."/>
+        <exclude domain="sharedpref" path="aios_secure_prefs.xml"/>
+        <exclude domain="sharedpref" path="aios_security_prefs.xml"/>
+        <exclude domain="sharedpref" path="next_border_sec_prefs.xml"/>
     </cloud-backup>
     <!--
     <device-transfer>
