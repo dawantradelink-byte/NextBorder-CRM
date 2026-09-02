@@ -27,7 +27,7 @@ import com.example.modules.research.model.ResearchedInstitutionEntity
         StudentProfileEntity::class,
         ExecutiveMemoryEntity::class
     ],
-    version = 10,
+    version = 11,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -72,13 +72,6 @@ abstract class AppDatabase : RoomDatabase() {
                 db.execSQL("CREATE TABLE IF NOT EXISTS `contact_logs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `universityId` INTEGER NOT NULL, `type` TEXT NOT NULL, `summary` TEXT NOT NULL, `timestamp` INTEGER NOT NULL)")
                 db.execSQL("CREATE TABLE IF NOT EXISTS `university_notes` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `universityId` INTEGER NOT NULL, `content` TEXT NOT NULL, `author` TEXT NOT NULL, `createdAt` INTEGER NOT NULL)")
                 db.execSQL("CREATE TABLE IF NOT EXISTS `meeting_records` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `universityId` INTEGER NOT NULL, `title` TEXT NOT NULL, `meetingDate` INTEGER NOT NULL, `meetingLink` TEXT NOT NULL, `status` TEXT NOT NULL, `createdAt` INTEGER NOT NULL)")
-                
-                // Todo Item columns
-                db.execSQL("ALTER TABLE todo_items ADD COLUMN priority TEXT NOT NULL DEFAULT 'Medium'")
-                db.execSQL("ALTER TABLE todo_items ADD COLUMN universityId INTEGER DEFAULT NULL")
-                db.execSQL("ALTER TABLE todo_items ADD COLUMN completedAt INTEGER DEFAULT NULL")
-                db.execSQL("ALTER TABLE todo_items ADD COLUMN recurringRule TEXT DEFAULT NULL")
-                db.execSQL("ALTER TABLE todo_items ADD COLUMN createdAt INTEGER NOT NULL DEFAULT ${System.currentTimeMillis()}")
             }
         }
 
@@ -198,6 +191,17 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_10_11 = object : Migration(10, 11) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Todo Item columns
+                db.execSQL("ALTER TABLE todo_items ADD COLUMN priority TEXT NOT NULL DEFAULT 'Medium'")
+                db.execSQL("ALTER TABLE todo_items ADD COLUMN universityId INTEGER DEFAULT NULL")
+                db.execSQL("ALTER TABLE todo_items ADD COLUMN completedAt INTEGER DEFAULT NULL")
+                db.execSQL("ALTER TABLE todo_items ADD COLUMN recurringRule TEXT DEFAULT NULL")
+                db.execSQL("ALTER TABLE todo_items ADD COLUMN createdAt INTEGER NOT NULL DEFAULT ${System.currentTimeMillis()}")
+            }
+        }
+
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -205,7 +209,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "crm_database"
                 )
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
                 .fallbackToDestructiveMigrationOnDowngrade(true)
                 .build()
                 INSTANCE = instance
