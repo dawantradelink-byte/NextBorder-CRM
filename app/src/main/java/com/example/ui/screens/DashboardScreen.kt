@@ -698,7 +698,7 @@ fun CrmDashboardScreen(
                         trailingIcon = {
                             if (searchQuery.isNotEmpty()) {
                                 IconButton(onClick = { viewModel.setSearchQuery("") }) {
-                                    Icon(Icons.Default.Clear, contentDescription = null, tint = Color.White)
+                                    Icon(Icons.Default.Clear, contentDescription = "Clear search query", tint = Color.White)
                                 }
                             }
                         },
