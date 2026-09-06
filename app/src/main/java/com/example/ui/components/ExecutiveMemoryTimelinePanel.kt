@@ -153,7 +153,7 @@ fun ExecutiveMemoryTimelinePanel(
                     placeholder = { Text("Search meeting history, emails, MOI policies...", color = Color.White.copy(alpha = 0.5f), fontSize = 12.sp) },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Color.White.copy(alpha = 0.6f)) },
                     trailingIcon = if (searchQuery.isNotEmpty()) {
-                        { IconButton(onClick = { searchQuery = "" }) { Icon(Icons.Default.Clear, contentDescription = null, tint = Color.White) } }
+                        { IconButton(onClick = { searchQuery = "" }) { Icon(Icons.Default.Clear, contentDescription = "Clear search query", tint = Color.White) } }
                     } else null,
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
@@ -275,7 +275,7 @@ fun ExecutiveMemoryCard(
                         Text("Score: ${memory.priorityScore}", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 10.sp, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
                     }
                     IconButton(onClick = onDelete, modifier = Modifier.size(24.dp)) {
-                        Icon(Icons.Default.Delete, contentDescription = null, tint = Color.White.copy(alpha = 0.6f), modifier = Modifier.size(16.dp))
+                        Icon(Icons.Default.Delete, contentDescription = "Delete memory", tint = Color.White.copy(alpha = 0.6f), modifier = Modifier.size(16.dp))
                     }
                 }
             }
