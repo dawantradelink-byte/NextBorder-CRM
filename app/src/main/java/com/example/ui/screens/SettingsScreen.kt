@@ -116,6 +116,39 @@ fun SettingsScreen(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
+                    Text("Workspace Plugins & Integrations", style = MaterialTheme.typography.titleMedium, color = Color(0xFF10B981))
+
+                    val plugins = listOf("Google Nano", "Banana Pro", "Opal", "Stitch", "Figma", "Caneva")
+
+                    plugins.forEach { pluginName ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(Icons.Default.Extension, contentDescription = null, tint = Color.White.copy(alpha = 0.7f), modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(pluginName, color = Color.White, fontSize = 13.sp)
+                            }
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(Icons.Default.CheckCircle, contentDescription = null, tint = Color(0xFF10B981), modifier = Modifier.size(14.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text("Approved via Gmail", color = Color(0xFF10B981), fontSize = 11.sp, fontWeight = FontWeight.Medium)
+                            }
+                        }
+                        if (pluginName != plugins.last()) {
+                            HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
+                        }
+                    }
+                }
+            }
+
+            GlassCard {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     Text("Agency Profile", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
 
                     OutlinedTextField(
