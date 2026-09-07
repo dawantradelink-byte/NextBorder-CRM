@@ -486,6 +486,9 @@ object CeoAiResearchCoordinator {
         val crmList = universityDao.getRawActiveList()
         var syncedCount = 0
 
+        val universitiesToInsert = mutableListOf<University>()
+        val institutionsToUpdate = mutableListOf<ResearchedInstitutionEntity>()
+
         for (item in researchedList) {
             val existsInCrm = crmList.any { crm ->
                 crm.name.equals(item.institutionName, ignoreCase = true) ||
@@ -519,10 +522,17 @@ object CeoAiResearchCoordinator {
                     notes = "Discovered by UK University Research Intelligence Engine (${item.researchSource}). Notes: ${item.scholarshipDetails}",
                     tags = "UK Research Engine, MOI Accepted, International Scholarships"
                 )
-                universityDao.insert(newUni)
-                researchDao.updateInstitution(item.copy(isSyncedToMainCrm = true))
+                universitiesToInsert.add(newUni)
+                institutionsToUpdate.add(item.copy(isSyncedToMainCrm = true))
                 syncedCount++
             }
+        }
+
+        if (universitiesToInsert.isNotEmpty()) {
+            universityDao.insertAll(universitiesToInsert)
+        }
+        if (institutionsToUpdate.isNotEmpty()) {
+            researchDao.updateInstitutions(institutionsToUpdate)
         }
         syncedCount
     }
