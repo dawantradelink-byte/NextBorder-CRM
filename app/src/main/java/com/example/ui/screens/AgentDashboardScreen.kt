@@ -96,6 +96,7 @@ fun AgentDashboardScreen(
                 item { AgentTab("Shared Memory Bank", selectedSection == "Memory") { selectedSection = "Memory" } }
                 item { AgentTab("Live Execution Logs", selectedSection == "Logs") { selectedSection = "Logs" } }
                 item { AgentTab("Outreach Templates", selectedSection == "Templates") { selectedSection = "Templates" } }
+                item { AgentTab("Plugins", selectedSection == "Plugins") { selectedSection = "Plugins" } }
             }
 
             when (selectedSection) {
@@ -110,6 +111,7 @@ fun AgentDashboardScreen(
                 "Memory" -> SharedMemoryBankSection(viewModel)
                 "Logs" -> AgentLiveLogsSection(viewModel)
                 "Templates" -> EmailTemplateEditor(viewModel)
+                "Plugins" -> PluginsDashboardSection()
             }
         }
     }
