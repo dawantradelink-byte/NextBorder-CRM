@@ -40,6 +40,7 @@ class MainActivity : FragmentActivity() {
 
         // Initialize AIOS Phase 4 Architecture Engines
         com.example.core.ai.CoreAiAgentInitializer.initializeDefaultAgents()
+        com.example.core.plugin.PluginInitializer.initializePlugins()
         com.example.core.log.AiosLogger.info("MainActivity", "NextBorder AIOS Phase 4 Core Engines Initialized.")
 
         // Automatically start Background Manager (Android WorkManager)
