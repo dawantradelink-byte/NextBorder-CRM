@@ -1,0 +1,3 @@
+## 2024-05-24 - Screen Reader Compatibility for Interactive IconButtons
+**Learning:** Found instances where `Icon` components nested inside `IconButton`s were explicitly setting `contentDescription = null`. This causes screen readers to skip announcing the button's purpose, degrading the accessibility of critical interactive actions (e.g., clearing searches, deleting memory items) within Jetpack Compose elements.
+**Action:** Always provide a clear, concise `contentDescription` (e.g., "Clear search", "Delete memory") on the `Icon` inside an `IconButton` to ensure full screen reader support and proper keyboard/accessibility navigation.
