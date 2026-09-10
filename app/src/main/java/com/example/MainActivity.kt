@@ -29,6 +29,12 @@ import com.example.ui.screens.UniversityDetailScreen
 import com.example.ui.theme.MyApplicationTheme
 import com.example.util.BiometricSecurityManager
 import com.example.viewmodel.CrmViewModel
+import com.example.core.plugin.PluginRegistry
+import com.example.core.plugin.plugins.CanvaPlugin
+import com.example.core.plugin.plugins.FigmaPlugin
+import com.example.core.plugin.plugins.GoogleNanoBananaProPlugin
+import com.example.core.plugin.plugins.OpalPlugin
+import com.example.core.plugin.plugins.StitchPlugin
 
 class MainActivity : FragmentActivity() {
 
@@ -41,6 +47,13 @@ class MainActivity : FragmentActivity() {
         // Initialize AIOS Phase 4 Architecture Engines
         com.example.core.ai.CoreAiAgentInitializer.initializeDefaultAgents()
         com.example.core.log.AiosLogger.info("MainActivity", "NextBorder AIOS Phase 4 Core Engines Initialized.")
+
+        // Register UI Plugins
+        PluginRegistry.registerPlugin(GoogleNanoBananaProPlugin())
+        PluginRegistry.registerPlugin(OpalPlugin())
+        PluginRegistry.registerPlugin(StitchPlugin())
+        PluginRegistry.registerPlugin(FigmaPlugin())
+        PluginRegistry.registerPlugin(CanvaPlugin())
 
         // Automatically start Background Manager (Android WorkManager)
         com.example.util.BackgroundSyncManager.startBackgroundManager(applicationContext)
