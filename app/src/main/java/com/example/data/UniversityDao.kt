@@ -23,9 +23,6 @@ interface UniversityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(university: University): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(universities: List<University>)
-
     @Update
     suspend fun update(university: University)
 
