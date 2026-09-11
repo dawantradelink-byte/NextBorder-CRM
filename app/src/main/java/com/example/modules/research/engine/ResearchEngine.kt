@@ -484,7 +484,9 @@ object CeoAiResearchCoordinator {
     ): Int = withContext(Dispatchers.IO) {
         val researchedList = researchDao.getRawInstitutionsList()
         val crmList = universityDao.getRawActiveList()
-        var syncedCount = 0
+
+        val newUniversitiesToInsert = mutableListOf<University>()
+        val institutionsToUpdate = mutableListOf<ResearchedInstitutionEntity>()
 
         for (item in researchedList) {
             val existsInCrm = crmList.any { crm ->
@@ -519,12 +521,20 @@ object CeoAiResearchCoordinator {
                     notes = "Discovered by UK University Research Intelligence Engine (${item.researchSource}). Notes: ${item.scholarshipDetails}",
                     tags = "UK Research Engine, MOI Accepted, International Scholarships"
                 )
-                universityDao.insert(newUni)
-                researchDao.updateInstitution(item.copy(isSyncedToMainCrm = true))
-                syncedCount++
+                newUniversitiesToInsert.add(newUni)
+                institutionsToUpdate.add(item.copy(isSyncedToMainCrm = true))
             }
         }
-        syncedCount
+
+        if (newUniversitiesToInsert.isNotEmpty()) {
+            universityDao.insertAll(newUniversitiesToInsert)
+        }
+
+        if (institutionsToUpdate.isNotEmpty()) {
+            researchDao.updateAllInstitutions(institutionsToUpdate)
+        }
+
+        newUniversitiesToInsert.size
     }
 
     private fun generateDiscoveredInstitutionsForAgent(
