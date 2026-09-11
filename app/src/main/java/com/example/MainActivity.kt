@@ -42,6 +42,10 @@ class MainActivity : FragmentActivity() {
         com.example.core.ai.CoreAiAgentInitializer.initializeDefaultAgents()
         com.example.core.log.AiosLogger.info("MainActivity", "NextBorder AIOS Phase 4 Core Engines Initialized.")
 
+        // Initialize External Plugins
+        // Hardcoded generic approved email per instructions, can be linked to settings later if required
+        com.example.core.plugin.ExternalPluginInitializer.initializePlugins("approved@gmail.com")
+
         // Automatically start Background Manager (Android WorkManager)
         com.example.util.BackgroundSyncManager.startBackgroundManager(applicationContext)
 

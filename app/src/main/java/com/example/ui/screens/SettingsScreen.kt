@@ -116,6 +116,25 @@ fun SettingsScreen(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
+                    Text("Installed UI Plugins", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                    com.example.core.plugin.PluginRegistry.getInstalledPlugins().forEach { plugin ->
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            Text(plugin.name, color = Color.White, fontWeight = FontWeight.Medium, fontSize = 14.sp)
+                            Text(plugin.version, color = Color.White.copy(alpha = 0.7f), fontSize = 12.sp)
+                        }
+                        if (plugin.description.isNotEmpty()) {
+                            Text(plugin.description, color = Color.White.copy(alpha = 0.6f), fontSize = 11.sp)
+                        }
+                        HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
+                    }
+                }
+            }
+
+            GlassCard {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     Text("Agency Profile", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
 
                     OutlinedTextField(
