@@ -1,0 +1,3 @@
+## 2024-05-24 - Missing ARIA Labels on Icon Buttons
+**Learning:** Found several `IconButton` components in Jetpack Compose UI with `contentDescription = null` for their inner `Icon`. This creates a severe accessibility issue where screen readers announce them as "button" or not at all, preventing visually impaired users from understanding the button's action.
+**Action:** When auditing or building Compose UIs, ensure all `IconButton` inner `Icon` components have a descriptive `contentDescription` (not `null`). Non-interactive decorative icons can keep `contentDescription = null`, but buttons must always have one.
